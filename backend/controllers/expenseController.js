@@ -1,15 +1,16 @@
 const xlsx = require("xlsx");
-const Income = require("../models/Income");
+const Income = require("../models/Expense");
 const fs = require("fs"); // For file cleanup if needed
+const Expense = require("../models/Expense");
 
-// Add Income Source
-exports.addIncome = async (req, res) => {
+// Add Expense Source
+exports.addExpense = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { icon, source, amount, date } = req.body;
+    const { icon, category, amount, date } = req.body;
 
     // Validation
-    if (!source || amount == null || !date) {
+    if (!category || amount == null || !date) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -20,16 +21,16 @@ exports.addIncome = async (req, res) => {
         .json({ message: "Amount must be a positive number" });
     }
 
-    const newIncome = await Income.create({
+    const newExpense = await Expense.create({
       userId,
       icon,
-      source,
+      category,
       amount: parseFloat(amount),
       date: new Date(date),
     });
 
-    await newIncome.save();
-    res.status(201).json(newIncome);
+    await newExpense.save();
+    res.status(201).json(newExpense);
   } catch (error) {
     console.error(error);
 
@@ -42,19 +43,20 @@ exports.addIncome = async (req, res) => {
 };
 
 // Get All Income Source
-exports.getAllIncome = async (req, res) => {
+exports.getAllExpense = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const income = await Income.find({ userId }).sort({ date: -1 });
+    const expense = await Expense.find({ userId }).sort({ date: -1 });
+    res.json(expense);
 
     // Calculate total income
-    const totalIncome = income.reduce((sum, item) => sum + item.amount, 0);
+    const totalExpense = expense.reduce((sum, item) => sum + item.amount, 0);
 
     res.json({
-      income,
-      totalIncome,
-      count: income.length,
+      expense,
+      totalExpense,
+      count: expense.length,
     });
   } catch (error) {
     console.error(error);
@@ -63,24 +65,24 @@ exports.getAllIncome = async (req, res) => {
 };
 
 // Delete Income Source
-exports.deleteIncome = async (req, res) => {
+exports.deleteExpense = async (req, res) => {
   try {
     const userId = req.user.id;
-    const income = await Income.findById(req.params.id);
+    const expense = await Expense.findById(req.params.id);
 
-    if (!income) {
+    if (!expense) {
       return res.status(404).json({ message: "Income not found" });
     }
 
     // Check ownership
-    if (income.userId.toString() !== userId) {
+    if (expense.userId.toString() !== userId) {
       return res
         .status(403)
-        .json({ message: "Not authorized to delete this income" });
+        .json({ message: "Not authorized to delete this expense" });
     }
 
-    await Income.findByIdAndDelete(req.params.id);
-    res.json({ message: "Income deleted successfully" });
+    await Expense.findByIdAndDelete(req.params.id);
+    res.json({ message: "Expense deleted successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error" });
@@ -88,19 +90,19 @@ exports.deleteIncome = async (req, res) => {
 };
 
 // Download Excel
-exports.downloadIncomeExcel = async (req, res) => {
+exports.downloadExpenseExcel = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const income = await Income.find({ userId }).sort({ date: -1 });
+    const expense = await Expense.find({ userId }).sort({ date: -1 });
 
-    if (income.length === 0) {
-      return res.status(404).json({ message: "No income data found" });
+    if (expense.length === 0) {
+      return res.status(404).json({ message: "No expense data found" });
     }
 
     // Prepare data for Excel with formatting
-    const data = income.map((item) => ({
-      Source: item.source,
+    const data = expense.map((item) => ({
+      Category: item.category,
       Amount: item.amount,
       Date: new Date(item.date).toLocaleDateString(),
       Icon: item.icon || "",
@@ -111,17 +113,17 @@ exports.downloadIncomeExcel = async (req, res) => {
 
     // Format column widths
     const colWidths = [
-      { wch: 20 }, // Source
+      { wch: 20 }, // Category
       { wch: 15 }, // Amount
       { wch: 15 }, // Date
       { wch: 10 }, // Icon
     ];
     ws["!cols"] = colWidths;
 
-    xlsx.utils.book_append_sheet(wb, ws, "Income");
+    xlsx.utils.book_append_sheet(wb, ws, "Expense");
 
     // Create unique filename
-    const filename = `income_${userId}_${Date.now()}.xlsx`;
+    const filename = `expense_${userId}_${Date.now()}.xlsx`;
     const filepath = `./${filename}`;
 
     xlsx.writeFile(wb, filepath);
