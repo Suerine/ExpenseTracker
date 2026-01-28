@@ -1,62 +1,59 @@
 const xlsx = require("xlsx");
-const Income = require("../models/Expense");
-const fs = require("fs"); // For file cleanup if needed
+const fs = require("fs");
 const Expense = require("../models/Expense");
 
-// Add Expense Source
+//  ======================= Add Expense =======================
 exports.addExpense = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user.id;
     const { icon, category, amount, date } = req.body;
 
     // Validation
-    if (!category || amount == null || !date) {
+    if (!category || amount === undefined || !date) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Validate amount is a number
     if (isNaN(amount) || amount < 0) {
       return res
         .status(400)
         .json({ message: "Amount must be a positive number" });
     }
 
-    const newExpense = await Expense.create({
-      userId,
-      icon,
-      category,
-      amount: parseFloat(amount),
-      date: new Date(date),
-    });
-
-    await newExpense.save();
-    res.status(201).json(newExpense);
-  } catch (error) {
-    console.error(error);
-
-    if (error.name === "ValidationError") {
-      return res.status(400).json({ message: error.message });
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+      return res.status(400).json({ message: "Invalid date format" });
     }
 
+    const expense = await Expense.create({
+      userId,
+      icon: icon || "💰",
+      category,
+      amount: Number(amount),
+      date: parsedDate,
+    });
+
+    res.status(201).json(expense);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Server Error" });
   }
 };
 
-// Get All Income Source
+// =======================
+// Get All Expenses
+// =======================
 exports.getAllExpense = async (req, res) => {
-  const userId = req.user.id;
-
   try {
-    const expense = await Expense.find({ userId }).sort({ date: -1 });
-    res.json(expense);
+    const userId = req.user.id;
 
-    // Calculate total income
-    const totalExpense = expense.reduce((sum, item) => sum + item.amount, 0);
+    const expenses = await Expense.find({ userId }).sort({ date: -1 });
+
+    const totalExpense = expenses.reduce((sum, item) => sum + item.amount, 0);
 
     res.json({
-      expense,
+      expenses,
       totalExpense,
-      count: expense.length,
+      count: expenses.length,
     });
   } catch (error) {
     console.error(error);
@@ -64,24 +61,25 @@ exports.getAllExpense = async (req, res) => {
   }
 };
 
-// Delete Income Source
+// =======================
+// Delete Expense
+// =======================
 exports.deleteExpense = async (req, res) => {
   try {
     const userId = req.user.id;
     const expense = await Expense.findById(req.params.id);
 
     if (!expense) {
-      return res.status(404).json({ message: "Income not found" });
+      return res.status(404).json({ message: "Expense not found" });
     }
 
-    // Check ownership
     if (expense.userId.toString() !== userId) {
       return res
         .status(403)
         .json({ message: "Not authorized to delete this expense" });
     }
 
-    await Expense.findByIdAndDelete(req.params.id);
+    await expense.deleteOne();
     res.json({ message: "Expense deleted successfully" });
   } catch (error) {
     console.error(error);
@@ -89,63 +87,40 @@ exports.deleteExpense = async (req, res) => {
   }
 };
 
-// Download Excel
+// =======================
+// Download Expense Excel
+// =======================
 exports.downloadExpenseExcel = async (req, res) => {
-  const userId = req.user.id;
-
   try {
-    const expense = await Expense.find({ userId }).sort({ date: -1 });
+    const userId = req.user.id;
 
-    if (expense.length === 0) {
+    const expenses = await Expense.find({ userId }).sort({ date: -1 });
+
+    if (!expenses.length) {
       return res.status(404).json({ message: "No expense data found" });
     }
 
-    // Prepare data for Excel with formatting
-    const data = expense.map((item) => ({
+    const data = expenses.map((item) => ({
       Category: item.category,
       Amount: item.amount,
-      Date: new Date(item.date).toLocaleDateString(),
+      Date: item.date.toISOString().split("T")[0],
       Icon: item.icon || "",
     }));
 
     const wb = xlsx.utils.book_new();
     const ws = xlsx.utils.json_to_sheet(data);
 
-    // Format column widths
-    const colWidths = [
-      { wch: 20 }, // Category
-      { wch: 15 }, // Amount
-      { wch: 15 }, // Date
-      { wch: 10 }, // Icon
-    ];
-    ws["!cols"] = colWidths;
+    ws["!cols"] = [{ wch: 20 }, { wch: 15 }, { wch: 15 }, { wch: 10 }];
 
-    xlsx.utils.book_append_sheet(wb, ws, "Expense");
+    xlsx.utils.book_append_sheet(wb, ws, "Expenses");
 
-    // Create unique filename
-    const filename = `expense_${userId}_${Date.now()}.xlsx`;
+    const filename = `expenses_${userId}_${Date.now()}.xlsx`;
     const filepath = `./${filename}`;
 
     xlsx.writeFile(wb, filepath);
 
-    // Set download headers
-    res.setHeader(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    );
-    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
-
-    // Send file
-    res.download(filepath, filename, (err) => {
-      if (err) {
-        console.error("Download error:", err);
-      }
-      // Cleanup file after sending (optional)
-      setTimeout(() => {
-        if (fs.existsSync(filepath)) {
-          fs.unlinkSync(filepath);
-        }
-      }, 5000); // Delete after 5 seconds
+    res.download(filepath, filename, () => {
+      if (fs.existsSync(filepath)) fs.unlinkSync(filepath);
     });
   } catch (error) {
     console.error(error);
