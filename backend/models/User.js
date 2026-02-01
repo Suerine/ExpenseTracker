@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// ✅ CORRECT async pre-save hook: async await function and next() cannnot pair together. Doing this will cause POSTMAN/Middleware error
+// Hash password before saving
 UserSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 10);
