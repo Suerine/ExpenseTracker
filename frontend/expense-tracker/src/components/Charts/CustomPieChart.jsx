@@ -9,6 +9,7 @@ import {
 } from "recharts";
 
 import CustomTooltip from "./CustomTooltip";
+import CustomLegend from "./CustomLegend";
 
 const CustomPieChart = ({
   data = [],
@@ -18,7 +19,8 @@ const CustomPieChart = ({
   showTextAnchor = false,
 }) => {
   return (
-    <ResponsiveContainer width="100%" height={300}>
+   <div className="flex flex-col items-center">
+    <ResponsiveContainer width="100%" height={260}>
       <PieChart>
         <Pie
           data={data}
@@ -38,8 +40,7 @@ const CustomPieChart = ({
           ))}
         </Pie>
 
-        <Tooltip content={CustomTooltip} />
-        <Legend />
+        <Tooltip content={<CustomTooltip />} />
 
         {showTextAnchor && (
           <>
@@ -69,7 +70,19 @@ const CustomPieChart = ({
         )}
       </PieChart>
     </ResponsiveContainer>
+
+    {/* 🔽 LEGEND OUTSIDE */}
+    <div className="mt-6">
+      <CustomLegend payload={data.map((d, i) => ({
+        value: d.name,
+        color: colors[i % colors.length],
+        payload: d
+      }))} />
+    </div>
+  </div>
+
   );
 };
+
 
 export default CustomPieChart;
