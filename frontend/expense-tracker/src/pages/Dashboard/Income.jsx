@@ -90,13 +90,53 @@ const Income = () => {
 
  
   // Delete Income
-  const deleteIncome = async (id) => {
+  const handleDelete = async (id) => {
+  if (!id) return;
 
+  try {
+    setLoading(true);
+
+    await axiosInstance.delete(
+      API_PATHS.INCOME.DELETE_INCOME(id)
+    );
+
+    toast.success("Income deleted successfully");
+    setOpenDeleteAlert({ show: false, data: null });
+    fetchIncomeDetails();
+
+  } catch (error) {
+    console.error(
+      "Error deleting income:",
+      error.response?.data?.message || error.message
+    );
+    toast.error("Failed to delete income");
+  } finally {
+    setLoading(false);
   }
+ };
 
-  const handleDownloadIncomeDetails = async () => {
 
-  }
+ const handleDownloadIncomeDetails = async () => {
+    try {
+    const response = await axiosInstance.get(
+     API_PATHS.INCOME.DOWNLOAD_INCOME,
+     {
+      responseType: "blob",
+     })
+      // Create a URL for the blob
+     const url = window.URL.createObjectURL(new Blob([response.data]))
+     const link = document.createElement("a");
+     link.href = url;
+     link.setAttribute("download", "income_details.xlsx");
+     document.body.appendChild(link);
+     link.click();
+     link.parentNode.removeChild(link);
+     window.URL.revokeObjectURL(url);
+     } catch (error) {
+       console.error("Error downloading income details:", error)
+       toast.error("Failed to download income details. Please try again later.")
+     }
+   }
 
   useEffect(() => {
    fetchIncomeDetails();
@@ -133,12 +173,14 @@ const Income = () => {
      </Modal>
 
      <Modal 
-      isOpen={openAddIncomeModal}
-      onClose={() => setOpenAddIncomeModal(false)}
-      title="Delete Income" >
-       <DeleteAlert 
-        content="Are you sure you want to delete this income? "
-        onDelete={() => deleteIncome(openDeleteAlert.data)}
+       isOpen={openDeleteAlert.show}
+       onClose={() => setOpenDeleteAlert({ show: false, data: null })}
+       title="Delete Income"
+     >
+       <DeleteAlert
+         content="Are you sure you want to delete this income?"
+         onDelete={() => handleDelete(openDeleteAlert.data)}
+         onCancel={() => setOpenDeleteAlert({ show: false, data: null })}
        />
      </Modal>
     </div>

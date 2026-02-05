@@ -1,20 +1,30 @@
 import React from 'react'
 
-const DeleteAlert = ({ content, onDelete}) => {
+const DeleteAlert = ({ content, onDelete, onCancel }) => {
   return (
-    <div className=''>
-     <p className='text-sm'>{content}</p>
+    <div>
+      <p className="text-sm">{content}</p>
 
-     <div className='fle justify-end mt-6'>
-      <button 
-      type='button'
-      className='add-btn add-btn-fill'
-      onClick={onDelete}>
-       Delete
-      </button>
-     </div>
+      <div className="flex justify-end gap-3 mt-6">
+        <button
+          type="button"
+          className="add-btn"
+          onClick={onCancel}
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          className="add-btn add-btn-fill"
+          onClick={onDelete}
+        >
+          Delete
+        </button>
+      </div>
     </div>
-  )
-}
+  );
+};
+
 
 export default DeleteAlert
