@@ -10,7 +10,7 @@ import {
 } from "recharts";
 
 const COLORS = [
-  "#875cf5",
+  "oklch(60% 0.118 184.704)",
   "#FA2C37",
   "#FF6900",
   "#22c55e",

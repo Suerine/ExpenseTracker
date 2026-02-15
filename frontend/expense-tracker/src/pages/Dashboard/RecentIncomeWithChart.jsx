@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import CustomPieChart from '../../components/Charts/CustomPieChart';
 
 const COLORS = [
-  "#875CF5", // purple
+  "oklch(60% 0.118 184.704)", // teal
   "#4F46E5", // indigo
   "#22C55E", // green
   "#16A34A", // dark green

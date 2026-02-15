@@ -12,13 +12,13 @@ import {
 
 const CustomBarChart = ({ data = [] }) => {
   const getBarColor = (index) =>
-    index % 2 === 0 ? "#875cf5" : "#cfbefb";
+    index % 2 === 0 ? "oklch(60% 0.118 184.704)" : "oklch(91% 0.096 180.426)";
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload?.length) {
       return (
         <div className="bg-white shadow-md rounded-lg p-2 border border-gray-100">
-          <p className="text-xs font-semibold text-purple-800 mb-1">
+          <p className="text-xs font-semibold text-cyan-800 mb-1">
             {payload[0].payload.month}
           </p>
           <p className="text-sm text-gray-600">
