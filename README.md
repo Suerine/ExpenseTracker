@@ -2,6 +2,10 @@
 # TL;DR
 A full-stack Expense Tracking Dashboard built with **React, Tailwind CSS, Node.js, Express, and MongoDB** that allows users to track income, manage expenses, and visualize financial activity through interactive charts. The dashboard provides **a real-time overview of balances, transactions, and spending trends using Recharts for data visualization.** This project helped me develop stronger skills in **full-stack development, REST API integration, dashboard UI design, and financial data visualization.**
 
+![React](https://img.shields.io/badge/Frontend-React-blue)
+![Node](https://img.shields.io/badge/Backend-Node.js-green)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-darkgreen)
+
 # 💰 Expense Tracker Dashboard
 
 A modern Expense Tracking Dashboard that helps users monitor their spending, visualize financial activity, and manage transactions efficiently. Built with a clean UI, responsive charts, and a structured dashboard layout. This project focuses on clarity, usability, and data visualization to help users understand their financial habits.
