@@ -9,9 +9,9 @@ const SideMenu = ({ activeMenu }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.clear();
-    clearUser();
-    navigate("/login");
+  navigate("/login");
+  localStorage.clear();
+  clearUser();
   };
 
   const handleClick = (route) => {
