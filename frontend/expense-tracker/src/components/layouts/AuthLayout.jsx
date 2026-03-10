@@ -1,5 +1,5 @@
 import React from 'react'
-import CARD_IMAGE from '../../assets/images/How-to-optimize-your-marketing-budget.png';
+import CARD_IMAGE from '../../assets/images/expense-image.jpg';
 import { LuTrendingUpDown } from 'react-icons/lu';
 
 const AuthLayout = ({ children }) => {
@@ -28,7 +28,7 @@ const AuthLayout = ({ children }) => {
 
        <img 
         src={CARD_IMAGE}
-        className='w-100 h-100 lg:w-[90%] absolute bottom-10 shadow-lg shadow-blue-400/15 rounded-[10px]'
+        className='w-100 h-100 lg:w-[90%] absolute bottom-10 shadow-lg shadow-blue-400/15 rounded-[10px] border-white border-8 border-rounded-lg'
          />
 
      </div>

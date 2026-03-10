@@ -1,6 +1,6 @@
 // Get your computer's local IP address (find it using ipconfig/ifconfig)
 // Replace 192.168.1.10 with YOUR actual local IP
-// const LOCAL_IP = "192.168.100.17"; // <-- Change this to your IP
+const LOCAL_IP = "192.168.100.17"; // <-- Change this to your IP
 
 export const BASE_URL = import.meta.env.VITE_API_URL || `http://localhost:8000`; // <-- Changed to 8000
 
