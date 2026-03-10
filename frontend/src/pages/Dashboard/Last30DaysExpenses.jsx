@@ -1,4 +1,3 @@
-import { prepare } from 'better-sqlite3/lib/methods/wrappers';
 import React, { useEffect, useState } from 'react';
 import { prepareExpenseBarChartData } from '../../utils/helper';
 import CustomBarChart from '../../components/Charts/CustomBarChart';
