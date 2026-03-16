@@ -4,6 +4,10 @@
 
 ### Link: [Expense Tracker Dashboard](https://expense-tracker-pi-eosin-58.vercel.app)
 
+### Video Demo
+![SpendWise Demo](https://github.com/user-attachments/assets/f4197517-b604-4445-bef1-ee822b9ad606)
+
+
 A modern Expense Tracking Dashboard that helps users monitor their spending, visualize financial activity, and manage transactions efficiently. Built with a clean UI, responsive charts, and a structured dashboard layout. This project focuses on clarity, usability, and data visualization to help users understand their financial habits.
 
 > **TL;DR:** A full-stack Expense Tracking Dashboard built with React, Tailwind CSS, Node.js, Express, and MongoDB that allows users to track income, manage expenses, and visualize financial activity through interactive charts. The dashboard provides a real-time overview of balances, transactions, and spending trends using Recharts for data visualization. This project helped me develop stronger skills in full-stack development, REST API integration, dashboard UI design, and financial data visualization.
