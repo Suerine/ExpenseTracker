@@ -2,7 +2,7 @@
 
 # 💰 SpendWise - Expense Tracker Dashboard
 
-### Project Link: [Expense Tracker Dashboard](https://expense-tracker-pi-eosin-58.vercel.app)
+### Link: [Expense Tracker Dashboard](https://expense-tracker-pi-eosin-58.vercel.app)
 
 A modern Expense Tracking Dashboard that helps users monitor their spending, visualize financial activity, and manage transactions efficiently. Built with a clean UI, responsive charts, and a structured dashboard layout. This project focuses on clarity, usability, and data visualization to help users understand their financial habits.
 
