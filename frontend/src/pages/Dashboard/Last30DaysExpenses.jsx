@@ -11,6 +11,13 @@ const Last30DaysExpenses = ({data}) => {
 
   return () => {};
  }, [data]);
+
+  useEffect(() => {
+   console.log("Raw data:", data);
+   const result = prepareExpenseBarChartData(data);
+   console.log("Chart data:", result);
+   setChartData(result);
+ }, [data]);
  
  return (
     <div className='card col-span-1'>

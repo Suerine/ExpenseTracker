@@ -30,10 +30,21 @@ export const addThousandsSeparator = (num) => {
 };
 
 export const prepareExpenseBarChartData = (data = []) => {
-  const chartData = data.map((item) => ({
-    month: moment(item?.date).format("Do MMM"),
-    category: item?.category,
-    amount: item?.amount,
+  // Group expenses by date and sum amounts
+  const grouped = data.reduce((acc, item) => {
+    const date = moment(item?.date).format("Do MMM");
+    if (acc[date]) {
+      acc[date] += item?.amount; // ✅ Add to existing day
+    } else {
+      acc[date] = item?.amount; // ✅ Create new day entry
+    }
+    return acc;
+  }, {});
+
+  // Convert back to array
+  const chartData = Object.keys(grouped).map((date) => ({
+    month: date,
+    amount: grouped[date],
   }));
 
   return chartData;
