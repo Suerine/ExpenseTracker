@@ -7,4 +7,7 @@ export default defineConfig({
   server: {
     historyApiFallback: true,
   },
+  build: {
+    sourcemap: false, // Disabling sourcemaps can sometimes bypass eval requirements
+  },
 });
