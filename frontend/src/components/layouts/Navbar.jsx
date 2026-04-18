@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import SideMenu from "./SideMenu";
+import { Link } from "react-router-dom";
 
 const Navbar = ({ activeMenu }) => {
   const [openSideMenu, setOpenSideMenu] = useState(false);
@@ -18,9 +19,11 @@ const Navbar = ({ activeMenu }) => {
         )}
       </button>
 
-      <h2 className="text-lg font-medium text-black">
-        Spend Wise
-      </h2>
+      <Link to="/">
+        <span className="text-lg font-bold tracking-tight">
+          Spend<span className="text-teal-500">Wise</span>
+        </span>
+      </Link>
 
       {openSideMenu && (
         <div className="fixed top-[61px] bg-white">

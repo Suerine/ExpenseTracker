@@ -13,6 +13,17 @@
   }
 }
 
+@keyframes blob {
+  from { transform: scale(1) rotate(0deg); }
+  to   { transform: scale(1.08) rotate(6deg); }
+}
+ 
+@keyframes floatY {
+  from { transform: translateY(0px); }
+  to   { transform: translateY(-8px); }
+}
+ 
+
 body {
  background-color: #fcfbfc;
  overflow-x: hidden;
