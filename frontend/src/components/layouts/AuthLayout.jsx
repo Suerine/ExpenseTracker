@@ -1,13 +1,18 @@
 import React from 'react'
 import CARD_IMAGE from '../../assets/images/expense-image.jpg';
 import { LuTrendingUpDown } from 'react-icons/lu';
+import { Link } from 'react-router-dom';
 
 const AuthLayout = ({ children }) => {
   return (
     <div className='flex'>
      <div className="w-screen h-screen md:w-[60vw] px-12 pt-8 pb-12">
-      <h2 className='text-lg font-medium text-black'>Spend Wise</h2>
-      {children}
+       <Link to="/">
+        <span className="text-lg font-bold tracking-tight">
+          Spend<span className="text-teal-500">Wise</span>
+        </span>
+       </Link>
+       {children}
      </div>
 
      <div className='hidden md:block w-[40vw] h-screen bg-cyan-50 bg-auth-bg-img bg-cover bg-no-repeat bg-center overflow-hidden p-8 relative'>
